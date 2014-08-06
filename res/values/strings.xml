@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AppLock</string>
+    <string name="manage_passcode">Manage passcode</string>
+    <string name="enter_passcode">Enter passcode</string>
+    <string name="enter_old_passcode">Enter old passcode</string>
+    <string name="reenter_passcode">Re-enter passcode</string>
+    <string name="change_passcode">Change passcode</string>
+    <string name="setup_passcode">Setup Passcode</string>
+    <string name="passcode_wrong">Wrong passcode, please try again.</string>
+    <string name="disable_passcode">Disable passcode</string>
+    <string name="enable_passcode">Enable passcode</string>
+
+</resources>
