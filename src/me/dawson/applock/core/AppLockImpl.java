@@ -1,11 +1,9 @@
 package me.dawson.applock.core;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -31,12 +29,10 @@ public class AppLockImpl extends AppLock implements PageListener {
 		this.visibleCount = 0;
 	}
 
-	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	public void enable() {
 		BaseActivity.setListener(this);
 	}
 
-	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	public void disable() {
 		BaseActivity.setListener(null);
 	}
@@ -84,8 +80,19 @@ public class AppLockImpl extends AppLock implements PageListener {
 		return false;
 	}
 
-	private boolean shouldLockSceen(Activity activity) {
+	private boolean isIgnoredActivity(Activity activity) {
 		String clazzName = activity.getClass().getName();
+
+		// ignored activities
+		if (ignoredActivities.contains(clazzName)) {
+			Log.d(TAG, "ignore activity " + clazzName);
+			return true;
+		}
+
+		return false;
+	}
+
+	private boolean shouldLockSceen(Activity activity) {
 
 		// already unlock
 		if (activity instanceof AppLockActivity) {
@@ -99,12 +106,6 @@ public class AppLockImpl extends AppLock implements PageListener {
 		// no pass code set
 		if (!isPasscodeSet()) {
 			Log.d(TAG, "lock passcode not set.");
-			return false;
-		}
-
-		// ignored activities
-		if (ignoredActivities.contains(clazzName)) {
-			Log.d(TAG, "ignore activity " + clazzName);
 			return false;
 		}
 
@@ -128,6 +129,10 @@ public class AppLockImpl extends AppLock implements PageListener {
 	public void onActivityPaused(Activity activity) {
 		String clazzName = activity.getClass().getName();
 		Log.d(TAG, "onActivityPaused " + clazzName);
+
+		if (isIgnoredActivity(activity)) {
+			return;
+		}
 	}
 
 	@Override
@@ -135,8 +140,11 @@ public class AppLockImpl extends AppLock implements PageListener {
 		String clazzName = activity.getClass().getName();
 		Log.d(TAG, "onActivityResumed " + clazzName);
 
-		if (shouldLockSceen(activity)) {
+		if (isIgnoredActivity(activity)) {
+			return;
+		}
 
+		if (shouldLockSceen(activity)) {
 			Intent intent = new Intent(activity.getApplicationContext(),
 					AppLockActivity.class);
 			intent.putExtra(AppLock.TYPE, AppLock.UNLOCK_PASSWORD);
@@ -149,11 +157,20 @@ public class AppLockImpl extends AppLock implements PageListener {
 
 	@Override
 	public void onActivityCreated(Activity activity) {
+
+		if (isIgnoredActivity(activity)) {
+			return;
+		}
+
 		liveCount++;
 	}
 
 	@Override
 	public void onActivityDestroyed(Activity activity) {
+		if (isIgnoredActivity(activity)) {
+			return;
+		}
+
 		liveCount--;
 		if (liveCount == 0) {
 			lastActive = System.currentTimeMillis();
@@ -163,12 +180,20 @@ public class AppLockImpl extends AppLock implements PageListener {
 
 	@Override
 	public void onActivitySaveInstanceState(Activity activity) {
+		if (isIgnoredActivity(activity)) {
+			return;
+		}
 	}
 
 	@Override
 	public void onActivityStarted(Activity activity) {
 		String clazzName = activity.getClass().getName();
 		Log.d(TAG, "onActivityStarted " + clazzName);
+
+		if (isIgnoredActivity(activity)) {
+			return;
+		}
+
 		visibleCount++;
 	}
 
@@ -176,6 +201,11 @@ public class AppLockImpl extends AppLock implements PageListener {
 	public void onActivityStopped(Activity activity) {
 		String clazzName = activity.getClass().getName();
 		Log.d(TAG, "onActivityStopped " + clazzName);
+
+		if (isIgnoredActivity(activity)) {
+			return;
+		}
+
 		visibleCount--;
 		if (visibleCount == 0) {
 			lastActive = System.currentTimeMillis();
