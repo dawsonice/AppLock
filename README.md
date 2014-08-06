@@ -26,10 +26,10 @@ public class HomePage extends BaseActivity{
 ### Demo
 
 ### demo manage screen
-![](http://ww1.sinaimg.cn/large/70489561jw1ej2r4a1zopj20u01hcq50.jpg =400x710)
+![](http://ww1.sinaimg.cn/large/70489561jw1ej2r4a1zopj20u01hcq50.jpg)
 
 ### demo unlock screen
-![](http://ww3.sinaimg.cn/large/70489561jw1ej2r40119jj20u01hcacr.jpg =400x710)
+![](http://ww3.sinaimg.cn/large/70489561jw1ej2r40119jj20u01hcacr.jpg)
 
 ===
 Any further question?
