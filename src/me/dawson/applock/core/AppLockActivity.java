@@ -37,7 +37,6 @@ public class AppLockActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.page_passcode);
 
 		tvMessage = (TextView) findViewById(R.id.tv_message);
